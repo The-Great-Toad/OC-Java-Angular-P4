@@ -47,7 +47,7 @@ class AuthControllerTest extends TestUtils {
     private UserRepository userRepository;
 
     private MockMvc mockMvc;
-    private ObjectMapper objectMapper = new ObjectMapper();
+    private final ObjectMapper objectMapper = new ObjectMapper();
 
     private static final String LOGIN_URL = "/api/auth/login";
     private static final String REGISTER_URL = "/api/auth/register";

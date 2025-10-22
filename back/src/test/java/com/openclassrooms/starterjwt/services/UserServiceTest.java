@@ -27,10 +27,10 @@ class UserServiceTest extends TestUtils {
     @Mock
     private UserRepository userRepository;
 
-    private static Long ID = 1L;
+    private static final Long USER_ID = 1L;
     @Test
     void delete() {
-        assertThatNoException().isThrownBy(() -> userService.delete(ID));
+        assertThatNoException().isThrownBy(() -> userService.delete(USER_ID));
     }
 
     @Nested
@@ -42,7 +42,7 @@ class UserServiceTest extends TestUtils {
 
             when(userRepository.findById(anyLong())).thenReturn(Optional.of(expectedUser));
 
-            User result = userService.findById(ID);
+            User result = userService.findById(USER_ID);
 
             assertNotNull(result);
             assertEquals(expectedUser, result);
@@ -52,7 +52,7 @@ class UserServiceTest extends TestUtils {
         void whenUserNotFound_thenReturnNull() {
             when(userRepository.findById(anyLong())).thenReturn(Optional.empty());
 
-            assertNull(userService.findById(ID));
+            assertNull(userService.findById(USER_ID));
         }
     }
 }

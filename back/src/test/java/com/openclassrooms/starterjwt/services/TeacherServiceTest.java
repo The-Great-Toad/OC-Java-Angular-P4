@@ -11,7 +11,6 @@ import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
 
-import java.util.ArrayList;
 import java.util.List;
 
 import static org.junit.jupiter.api.Assertions.*;
@@ -26,7 +25,7 @@ class TeacherServiceTest extends TestUtils {
     @Mock
     private TeacherRepository teacherRepository;
 
-    private static Long ID = 1L;
+    private static final Long TEACHER_ID = 1L;
 
     @Test
     void findAll() {
@@ -48,9 +47,9 @@ class TeacherServiceTest extends TestUtils {
         void shouldReturnTeacher() {
             Teacher expectedTeacher = getTeacher();
 
-            when(teacherRepository.findById(ID)).thenReturn(java.util.Optional.of(expectedTeacher));
+            when(teacherRepository.findById(TEACHER_ID)).thenReturn(java.util.Optional.of(expectedTeacher));
 
-            Teacher result = teacherService.findById(ID);
+            Teacher result = teacherService.findById(TEACHER_ID);
 
             assertNotNull(result);
             assertEquals(expectedTeacher, result);
@@ -58,9 +57,9 @@ class TeacherServiceTest extends TestUtils {
 
         @Test
         void whenTeacherNotFound_thenReturnNull() {
-            when(teacherRepository.findById(ID)).thenReturn(java.util.Optional.empty());
+            when(teacherRepository.findById(TEACHER_ID)).thenReturn(java.util.Optional.empty());
 
-            assertNull(teacherService.findById(ID));
+            assertNull(teacherService.findById(TEACHER_ID));
         }
     }
 }

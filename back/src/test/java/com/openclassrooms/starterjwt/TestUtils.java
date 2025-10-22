@@ -9,16 +9,13 @@ import com.openclassrooms.starterjwt.models.User;
 import com.openclassrooms.starterjwt.payload.request.LoginRequest;
 import com.openclassrooms.starterjwt.payload.request.SignupRequest;
 import com.openclassrooms.starterjwt.security.services.UserDetailsImpl;
-import io.jsonwebtoken.JwtBuilder;
 import io.jsonwebtoken.Jwts;
 import io.jsonwebtoken.SignatureAlgorithm;
-import org.junit.platform.commons.util.StringUtils;
 
 import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
-import java.util.Objects;
 
 public class TestUtils {
 
@@ -100,19 +97,6 @@ public class TestUtils {
                 .firstName("firstname")
                 .password("password")
                 .admin(false)
-                .createdAt(LocalDateTime.now().minusDays(1))
-                .updatedAt(LocalDateTime.now())
-                .build();
-    }
-
-    public User getAdminUser() {
-        return User.builder()
-                .id(1L)
-                .email("test-admin@email.com")
-                .lastName("lastname")
-                .firstName("firstname")
-                .password("password")
-                .admin(true)
                 .createdAt(LocalDateTime.now().minusDays(1))
                 .updatedAt(LocalDateTime.now())
                 .build();
