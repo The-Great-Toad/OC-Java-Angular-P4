@@ -1,10 +1,18 @@
 package com.openclassrooms.starterjwt.payload.response;
 
+import lombok.AllArgsConstructor;
+import lombok.Builder;
+import lombok.Data;
 import lombok.Getter;
+import lombok.NoArgsConstructor;
 import lombok.Setter;
+import lombok.ToString;
 
-@Getter
-@Setter
+@Data
+@Builder
+@AllArgsConstructor
+@NoArgsConstructor
+@ToString
 public class JwtResponse {
   private String token;
   private String type = "Bearer";
