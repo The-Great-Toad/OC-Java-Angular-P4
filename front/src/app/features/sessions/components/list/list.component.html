@@ -9,19 +9,20 @@
                 <span class="ml1">Create</span>
             </button>
         </mat-card-header>
-        <div class="items mt2" fxLayout="row wrap" fxLayout.lt-md="column">
+        <div class="items mt2" fxLayout="row wrap" fxLayout.lt-md="column" data-test="session-list">
             <mat-card class="item" *ngFor="let session of (sessions$ | async)" fxFlex>
                 <mat-card-header>
-                    <mat-card-title>{{ session.name }}</mat-card-title>
-                    <mat-card-subtitle>
+                    <mat-card-title data-test="session-name">{{ session.name }}</mat-card-title>
+                    <mat-card-subtitle data-test="session-date">
                         Session on {{ session.date | date: 'longDate'}}
                     </mat-card-subtitle>
                 </mat-card-header>
                 <div mat-card-image fxLayoutAlign="center center">
-                    <img class="picture" src="assets/sessions.png" alt="Yoga session">
+                    <img class="picture" src="assets/sessions.png" alt="Yoga session"
+                         data-test="session-image">
                 </div>
                 <mat-card-content>
-                    <p>
+                    <p data-test="session-description">
                         {{ session.description }}
                     </p>
                 </mat-card-content>

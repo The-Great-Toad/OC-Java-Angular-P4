@@ -1,24 +1,29 @@
 <div class="register" fxLayout="row" fxLayoutAlign="center center">
     <mat-card>
         <mat-card-header fxLayoutAlign="center center">
-            <mat-card-title>Register</mat-card-title>
+            <mat-card-title data-test="page-title">Register</mat-card-title>
         </mat-card-header>
         <form class="register-form" [formGroup]="form" (ngSubmit)="submit()">
             <mat-card-content fxLayout="column">
                 <mat-form-field fxFlex>
-                    <input matInput placeholder="First name" formControlName="firstName">
+                    <input matInput placeholder="First name" formControlName="firstName"
+                           data-test="firstname-input">
                 </mat-form-field>
                 <mat-form-field fxFlex>
-                    <input matInput placeholder="Last name" formControlName="lastName">
+                    <input matInput placeholder="Last name" formControlName="lastName"
+                           data-test="lastname-input">
                 </mat-form-field>
                 <mat-form-field fxFlex>
-                    <input matInput placeholder="Email" formControlName="email">
+                    <input matInput placeholder="Email" formControlName="email"
+                           data-test="email-input">
                 </mat-form-field>
                 <mat-form-field fxFlex>
-                    <input matInput placeholder="Password" formControlName="password">
+                    <input matInput placeholder="Password" formControlName="password"
+                           data-test="password-input">
                 </mat-form-field>
             </mat-card-content>
-            <button mat-raised-button color="primary" type="submit" [disabled]="form.invalid">Submit</button>
+            <button mat-raised-button color="primary" type="submit" [disabled]="form.invalid"
+                    data-test="submit-button">Submit</button>
             <span *ngIf="onError" class="error ml2">An error occurred</span>
         </form>
     </mat-card>
