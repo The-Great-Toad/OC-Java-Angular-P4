@@ -1,7 +1,9 @@
 {
   "id": 1,
-  "username": "yoga@studio.com",
+  "email": "yoga@studio.com",
   "firstName": "Admin",
   "lastName": "Admin",
-  "admin": true
+  "admin": true,
+  "createdAt": "2025-09-15",
+  "updatedAt": "2025-09-16"
 }

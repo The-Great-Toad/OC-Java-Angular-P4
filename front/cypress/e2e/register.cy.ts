@@ -15,16 +15,16 @@ describe('Register page', () => {
 
   context('Form validation', () => {
     it('should show invalid input first name field when first name is not filled', () =>
-      checkInputValidity('firstname-input'));
+      cy.checkInputValidity('firstname-input'));
 
     it('should show invalid input lastname field when lastname is not filled', () =>
-      checkInputValidity('lastname-input'));
+      cy.checkInputValidity('lastname-input'));
 
     it('should show invalid input email field when email is not filled', () =>
-      checkInputValidity('email-input'));
+      cy.checkInputValidity('email-input'));
 
     it('should show invalid input password field when password is not filled', () =>
-      checkInputValidity('password-input'));
+      cy.checkInputValidity('password-input'));
 
     it('should have disabled submit button with invalid email', () => {
       cy.getByData('email-input').type('invalidemail');
@@ -82,11 +82,6 @@ describe('Register page', () => {
     });
   });
 });
-
-function checkInputValidity(inputName: string) {
-  cy.getByData(inputName).focus().blur();
-  cy.getByData(inputName).should('have.class', 'ng-invalid');
-}
 
 function fillRegistrationForm() {
   cy.getByData('firstname-input').type('John');

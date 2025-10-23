@@ -1,7 +1,9 @@
 {
   "id": 2,
-  "username": "user@test.com",
+  "email": "user@test.com",
   "firstName": "John",
   "lastName": "Doe",
-  "admin": false
+  "admin": false,
+  "createdAt": "2025-10-01",
+  "updatedAt": "2025-10-04"
 }

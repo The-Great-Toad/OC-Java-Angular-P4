@@ -47,3 +47,12 @@
 Cypress.Commands.add('getByData', (selector) => {
   return cy.get(`[data-test=${selector}]`);
 });
+
+Cypress.Commands.add('checkInputValidity', (selector) => {
+  cy.getByData(selector).focus().blur();
+  cy.getByData(selector).should('have.class', 'ng-invalid');
+});
+
+Cypress.Commands.add('verifyPageTitle', (title) => {
+  cy.getByData('page-title').should('exist').contains(title);
+});
