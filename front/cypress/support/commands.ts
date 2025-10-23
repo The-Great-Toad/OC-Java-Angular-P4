@@ -1,3 +1,5 @@
+/// <reference types="cypress" />
+
 // ***********************************************
 // This example namespace declaration will help
 // with Intellisense and code completion in your
@@ -41,3 +43,16 @@
 //
 // -- This will overwrite an existing command --
 // Cypress.Commands.overwrite("visit", (originalFn, url, options) => { ... })
+
+Cypress.Commands.add('getByData', (selector) => {
+  return cy.get(`[data-test=${selector}]`);
+});
+
+Cypress.Commands.add('checkInputValidity', (selector) => {
+  cy.getByData(selector).focus().blur();
+  cy.getByData(selector).should('have.class', 'ng-invalid');
+});
+
+Cypress.Commands.add('verifyPageTitle', (title) => {
+  cy.getByData('page-title').should('exist').contains(title);
+});

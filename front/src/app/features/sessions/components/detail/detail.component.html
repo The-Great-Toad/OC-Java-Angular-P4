@@ -1,69 +1,78 @@
 <div class="m3">
-  <mat-card *ngIf="session">
-    <mat-card-title>
-      <div fxLayout="row" fxLayoutAlign="space-between center">
-        <div fxLayout="row" fxLayoutAlign="start center">
-          <button mat-icon-button (click)="back()">
-            <mat-icon>arrow_back</mat-icon>
-          </button>
-          <h1>{{session.name | titlecase}}</h1>
-        </div>
-        <div>
-          <button *ngIf="isAdmin" mat-raised-button color="warn" (click)="delete()">
-            <mat-icon>delete</mat-icon>
-            <span class="ml1">Delete</span>
-          </button>
-          <div *ngIf="!isAdmin">
-            <button *ngIf="!isParticipate" mat-raised-button color="primary" (click)="participate()">
-              <mat-icon>person_add</mat-icon>
-              <span class="ml1">Participate</span>
-            </button>
-            <button *ngIf="isParticipate" mat-raised-button color="warn" (click)="unParticipate()">
-              <mat-icon>person_remove</mat-icon>
-              <span class="ml1">Do not participate</span>
-            </button>
+    <mat-card *ngIf="session">
+        <mat-card-title>
+            <div fxLayout="row" fxLayoutAlign="space-between center">
+                <div fxLayout="row" fxLayoutAlign="start center">
+                    <button mat-icon-button (click)="back()">
+                        <mat-icon>arrow_back</mat-icon>
+                    </button>
+                    <h1 data-test="session-name">{{session.name | titlecase}}</h1>
+                </div>
+                <div>
+                    <button *ngIf="isAdmin" mat-raised-button color="warn" (click)="delete()"
+                            data-test="delete-button">
+                        <mat-icon>delete</mat-icon>
+                        <span class="ml1">Delete</span>
+                    </button>
+                    <div *ngIf="!isAdmin">
+                        <button *ngIf="!isParticipate" mat-raised-button color="primary"
+                                (click)="participate()" data-test="participate-button">
+                            <mat-icon>person_add</mat-icon>
+                            <span class="ml1">Participate</span>
+                        </button>
+                        <button *ngIf="isParticipate" mat-raised-button color="warn"
+                                (click)="unParticipate()" data-test="unparticipate-button">
+                            <mat-icon>person_remove</mat-icon>
+                            <span class="ml1">Do not participate</span>
+                        </button>
 
-          </div>
+                    </div>
 
 
+                </div>
+            </div>
+        </mat-card-title>
+        <mat-card-subtitle *ngIf="teacher">
+            <div fxLayoutAlign="start center" class="ml3">
+                <mat-icon>
+                    people
+                </mat-icon>
+                <span class="ml1" data-test="session-teacher">{{ teacher.firstName }} {{
+                    teacher.lastName | uppercase }}</span>
+            </div>
+        </mat-card-subtitle>
+        <div mat-card-image fxLayoutAlign="center center">
+            <img class="picture" src="assets/sessions.png" alt="Yoga session"
+                 data-test="session-image">
         </div>
-      </div>
-    </mat-card-title>
-    <mat-card-subtitle *ngIf="teacher">
-      <div fxLayoutAlign="start center" class="ml3">
-        <mat-icon>
-          people
-        </mat-icon>
-        <span class="ml1">{{ teacher.firstName }} {{ teacher.lastName | uppercase }}</span>
-      </div>
-    </mat-card-subtitle>
-    <div mat-card-image fxLayoutAlign="center center">
-      <img class="picture" src="assets/sessions.png" alt="Yoga session">
-    </div>
-    <mat-card-content>
-      <div class="my2" fxLayout="row" fxLayoutAlign="space-between center">
-        <div fxLayoutAlign="start center">
-          <mat-icon>
-            group
-          </mat-icon>
-          <span class="ml1">{{ session.users.length }} attendees</span>
-        </div>
-        <div fxLayoutAlign="start center">
-          <mat-icon>
-            calendar_month
-          </mat-icon>
-          <span class="ml1">{{ session.date | date: 'longDate'}}</span>
-        </div>
-      </div>
-      <div class="description">
-        <p>Description:</p>
-        {{ session.description }}
-        <br>
-      </div>
-      <div class="date" class="my2" fxLayout="row" fxLayoutAlign="space-between center">
-        <div class="created"><i>Create at: </i> {{ session.createdAt| date: 'longDate'}}</div>
-        <div class="updated"><i>Last update: </i> {{ session.updatedAt| date: 'longDate'}}</div>
-      </div>
-    </mat-card-content>
-  </mat-card>
+        <mat-card-content>
+            <div class="my2" fxLayout="row" fxLayoutAlign="space-between center">
+                <div fxLayoutAlign="start center">
+                    <mat-icon>
+                        group
+                    </mat-icon>
+                    <span class="ml1" data-test="session-attendees">{{ session.users.length }}
+                        attendees</span>
+                </div>
+                <div fxLayoutAlign="start center">
+                    <mat-icon>
+                        calendar_month
+                    </mat-icon>
+                    <span class="ml1" data-test="session-date">{{ session.date | date:
+                        'longDate'}}</span>
+                </div>
+            </div>
+            <div class="description" data-test="session-description">
+                <p>Description:</p>
+                {{ session.description }}
+                <br>
+            </div>
+            <div class="date" class="my2" fxLayout="row" fxLayoutAlign="space-between center">
+                <div class="created" data-test="session-created-date"><i>Create at: </i> {{
+                    session.createdAt| date: 'longDate'}}</div>
+                <div class="updated" data-test="session-updated-date"><i>Last update: </i> {{
+                    session.updatedAt| date: 'longDate'}}</div>
+            </div>
+        </mat-card-content>
+    </mat-card>
 </div>
