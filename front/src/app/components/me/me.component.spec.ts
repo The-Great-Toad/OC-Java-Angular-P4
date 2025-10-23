@@ -9,65 +9,21 @@ import { Router } from '@angular/router';
 import { of } from 'rxjs';
 import { SessionService } from 'src/app/services/session.service';
 import { UserService } from 'src/app/services/user.service';
-import { User } from 'src/app/interfaces/user.interface';
-import { SessionInformation } from 'src/app/interfaces/sessionInformation.interface';
+import {
+  mockMatSnackBar,
+  mockRouter,
+  mockSessionService,
+  mockUser,
+  mockUserService,
+} from 'src/tests/test-utils';
 
 import { MeComponent } from './me.component';
 
 describe('MeComponent', () => {
   let component: MeComponent;
   let fixture: ComponentFixture<MeComponent>;
-  let mockUserService: any;
-  let mockRouter: any;
-  let mockMatSnackBar: any;
-  let mockSessionService: any;
-
-  const mockUser: User = {
-    id: 1,
-    email: 'test@test.com',
-    firstName: 'John',
-    lastName: 'Doe',
-    admin: false,
-    password: 'password',
-    createdAt: new Date('2023-01-01'),
-    updatedAt: new Date('2023-01-02'),
-  };
-
-  const mockAdminUser: User = {
-    ...mockUser,
-    admin: true,
-  };
-
-  const mockSessionInformation: SessionInformation = {
-    token: 'mock-token',
-    type: 'Bearer',
-    id: 1,
-    username: 'testuser',
-    firstName: 'John',
-    lastName: 'Doe',
-    admin: false,
-  };
 
   beforeEach(async () => {
-    // Mock des services
-    mockUserService = {
-      getById: jest.fn(),
-      delete: jest.fn(),
-    };
-
-    mockRouter = {
-      navigate: jest.fn(),
-    };
-
-    mockMatSnackBar = {
-      open: jest.fn(),
-    };
-
-    mockSessionService = {
-      sessionInformation: mockSessionInformation,
-      logOut: jest.fn(),
-    };
-
     // Mock de window.history.back
     Object.defineProperty(window, 'history', {
       value: { back: jest.fn() },
@@ -94,6 +50,7 @@ describe('MeComponent', () => {
 
     fixture = TestBed.createComponent(MeComponent);
     component = fixture.componentInstance;
+    jest.clearAllMocks();
   });
 
   it('should create', () => {
