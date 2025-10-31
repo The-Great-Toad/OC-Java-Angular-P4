@@ -1,3 +1,5 @@
+import { login } from '../support/e2e';
+
 describe('Login page', () => {
   beforeEach(() => {
     cy.visit('/login');
@@ -5,11 +7,11 @@ describe('Login page', () => {
 
   context('initial state', () => {
     it('should display the login page', () => {
-      cy.getByData('page-title').should('exist').contains('Login');
+      cy.verifyPageTitle('Login');
     });
 
     it('should have disabled submit button with empty form', () => {
-      cy.get('button[type=submit]').should('be.disabled');
+      cy.getByData('submit-button').should('be.disabled');
     });
   });
 
@@ -25,15 +27,15 @@ describe('Login page', () => {
     });
 
     it('should have disabled submit button with invalid email', () => {
-      cy.get('input[formControlName=email]').type('invalidemail');
-      cy.get('input[formControlName=password]').type('password123');
-      cy.get('button[type=submit]').should('be.disabled');
+      cy.getByData('email-input').type('invalidemail');
+      cy.getByData('password-input').type('password123');
+      cy.getByData('submit-button').should('be.disabled');
     });
 
     it('should enable submit button with valid form', () => {
-      cy.get('input[formControlName=email]').type('valid@email.com');
-      cy.get('input[formControlName=password]').type('password123');
-      cy.get('button[type=submit]').should('not.be.disabled');
+      cy.getByData('email-input').type('valid@email.com');
+      cy.getByData('password-input').type('password123');
+      cy.getByData('submit-button').should('not.be.disabled');
     });
 
     it('should display error message with invalid credentials', () => {
@@ -42,8 +44,8 @@ describe('Login page', () => {
         fixture: 'login-error.json',
       }).as('loginRequest');
 
-      cy.get('input[formControlName=email]').type('wrong@test.com');
-      cy.get('input[formControlName=password]').type('wrongpassword');
+      cy.getByData('email-input').type('wrong@test.com');
+      cy.getByData('password-input').type('wrongpassword');
       cy.getByData('submit-button').should('exist').click();
 
       cy.wait('@loginRequest');
@@ -52,11 +54,20 @@ describe('Login page', () => {
         .should('be.visible')
         .contains('An error occurred');
     });
+
+    it('should show/hide password when toggle visibility is clicked', () => {
+      cy.getByData('password-input').type('MySecretPassword');
+      cy.getByData('toggle-password-visibility').click();
+      cy.getByData('password-input').should('have.attr', 'type', 'text');
+
+      cy.getByData('toggle-password-visibility').click();
+      cy.getByData('password-input').should('have.attr', 'type', 'password');
+    });
   });
 
   context('Admin user journey', () => {
     it('should login successfully as admin', () => {
-      executeLogin('user-admin.json');
+      login('user-admin.json');
 
       cy.getByData('detail-button').should('exist');
       cy.getByData('update-button').should('exist');
@@ -65,38 +76,10 @@ describe('Login page', () => {
 
   context('Regular user journey', () => {
     it('should login successfully as regular user', () => {
-      executeLogin('user-regular.json');
+      login('user-regular.json');
 
       cy.getByData('detail-button').should('exist');
       cy.getByData('update-button').should('not.exist');
     });
   });
 });
-
-function executeLogin(userToLoad: string) {
-  // Mock de la réponse du backend pour le login
-  cy.intercept('POST', '/api/auth/login', {
-    fixture: userToLoad,
-  }).as('loginRequest');
-
-  // Mock de la liste des sessions
-  cy.intercept('GET', '/api/session', {
-    fixture: 'sessions.json',
-  }).as('sessionList');
-
-  // Remplir le formulaire
-  cy.get('input[formControlName=email]').type('user@test.com');
-  cy.get('input[formControlName=password]').type('password123');
-  //   cy.get('input[formControlName=email]').type('yoga@studio.com');
-  //   cy.get('input[formControlName=password]').type('test!1234');
-  cy.getByData('submit-button').should('exist').click();
-
-  // Vérifier que la requête a été appelée
-  cy.wait('@loginRequest');
-
-  // Vérifier la redirection vers /sessions
-  cy.url().should('include', '/sessions');
-  cy.getByData('page-title')
-    .should('exist')
-    .contains('Yoga Sessions available');
-}

@@ -18,3 +18,23 @@
 
 import '@cypress/code-coverage/support';
 import './commands';
+
+export function login(
+  loginFixture: string,
+  sessionListFixture = 'sessions.json'
+) {
+  cy.visit('/login');
+  cy.intercept('POST', '/api/auth/login', {
+    fixture: loginFixture,
+  });
+  cy.intercept('GET', '/api/session', {
+    fixture: sessionListFixture,
+  });
+
+  // Remplir le formulaire de login et le soumettre
+  cy.getByData('email-input').type('valid@email.com');
+  cy.getByData('password-input').type('password123');
+  cy.getByData('submit-button').click();
+
+  cy.url().should('include', '/sessions');
+}

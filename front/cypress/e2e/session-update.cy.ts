@@ -1,10 +1,10 @@
 import sessionToUpdate from '../fixtures/session-created.json';
+import { login } from '../support/e2e';
 
 describe('Sessions page', () => {
   context('initial state', () => {
     before(() => {
-      cy.visit('/sessions/update/3');
-      login('user-admin.json');
+      login('user-admin.json', 'sessions-after-create.json');
       goToUpdateForm();
     });
 
@@ -41,8 +41,7 @@ describe('Sessions page', () => {
 
   context('Admin user journey', () => {
     before(() => {
-      cy.visit('/sessions/update/3');
-      login('user-admin.json');
+      login('user-admin.json', 'sessions-after-create.json');
       goToUpdateForm();
     });
 
@@ -80,23 +79,6 @@ describe('Sessions page', () => {
     });
   });
 });
-
-function login(fixture: string) {
-  cy.intercept('POST', '/api/auth/login', {
-    fixture: fixture,
-  }).as('loginRequest');
-
-  cy.intercept('GET', '/api/session', {
-    fixture: 'sessions-after-create.json',
-  }).as('sessionList');
-
-  // Remplir le formulaire de login et le soumettre
-  cy.getByData('email-input').type('valid@email.com');
-  cy.getByData('password-input').type('password123');
-  cy.getByData('submit-button').click();
-
-  cy.url().should('include', '/sessions');
-}
 
 function goToUpdateForm() {
   cy.intercept('GET', '/api/session/3', {

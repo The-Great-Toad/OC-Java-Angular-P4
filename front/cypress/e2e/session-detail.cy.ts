@@ -2,13 +2,17 @@ import sessionParticipate from '../fixtures/session-details-participate.json';
 import sessionUnparticipate from '../fixtures/session-details-unparticipate.json';
 import teacher from '../fixtures/teacher.json';
 import user from '../fixtures/user-regular.json';
+import { login } from '../support/e2e';
 
 describe('Session details page', () => {
   context('initial state', () => {
     before(() => {
-      cy.visit('/sessions/detail/1');
       login('user-regular.json');
       goToSessionDetail('session-details-unparticipate.json');
+    });
+
+    it('should display have a back button', () => {
+      cy.getByData('back-button').should('exist');
     });
 
     it('should display the session name', () => {
@@ -54,7 +58,6 @@ describe('Session details page', () => {
 
   context('Regular user journey - Unparticipate', () => {
     before(() => {
-      cy.visit('/sessions/detail/1');
       login('user-regular.json');
       goToSessionDetail('session-details-unparticipate.json');
     });
@@ -110,11 +113,15 @@ describe('Session details page', () => {
       cy.getByData('unparticipate-button').should('not.exist');
       cy.getByData('participate-button').should('exist');
     });
+
+    it('should be able to go back to the session list', () => {
+      cy.getByData('back-button').click();
+      cy.url().should('include', '/sessions');
+    });
   });
 
   context('Admin user journey', () => {
     before(() => {
-      cy.visit('/sessions/detail/1');
       login('user-admin.json');
       goToSessionDetail('session-details-participate.json');
       cy.url().should('include', `/sessions/detail/1`);
@@ -126,7 +133,7 @@ describe('Session details page', () => {
       cy.getByData('unparticipate-button').should('not.exist');
     });
 
-    it.only('should be able to delete the session', () => {
+    it('should be able to delete the session', () => {
       // Simuler la suppression de la session
       cy.intercept('DELETE', `/api/session/1`, {
         statusCode: 200,
@@ -157,23 +164,6 @@ describe('Session details page', () => {
     });
   });
 });
-
-function login(fixture: string) {
-  cy.intercept('POST', '/api/auth/login', {
-    fixture: fixture,
-  }).as('loginRequest');
-
-  cy.intercept('GET', '/api/session', {
-    fixture: 'sessions.json',
-  }).as('sessionList');
-
-  // Remplir le formulaire de login et le soumettre
-  cy.getByData('email-input').type('valid@email.com');
-  cy.getByData('password-input').type('password123');
-  cy.getByData('submit-button').click();
-
-  cy.url().should('include', '/sessions');
-}
 
 function goToSessionDetail(sessionFixture: string) {
   cy.intercept('GET', `/api/session/1`, {

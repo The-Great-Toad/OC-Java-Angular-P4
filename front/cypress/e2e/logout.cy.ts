@@ -1,21 +1,8 @@
+import { login } from '../support/e2e';
+
 describe('Logout spec', () => {
   beforeEach(() => {
-    // Login
-    cy.visit('/login');
-
-    cy.intercept('POST', '/api/auth/login', {
-      fixture: 'user-regular.json',
-    });
-
-    cy.intercept('GET', '/api/session', {
-      fixture: 'sessions.json',
-    });
-
-    cy.get('input[formControlName=email]').type('yoga@studio.com');
-    cy.get('input[formControlName=password]').type('test!1234');
-    cy.getByData('submit-button').should('exist').click();
-
-    cy.url().should('include', '/sessions');
+    login('user-regular.json');
   });
 
   it('should logout successfully and redirect to home', () => {
@@ -26,7 +13,7 @@ describe('Logout spec', () => {
     cy.get('span').contains('Logout').click();
 
     // Vérifier la redirection vers la page d'accueil
-    cy.url().should('eq', 'http://localhost:4200/');
+    cy.url().should('contain', Cypress.config().baseUrl);
 
     // Vérifier que les liens Login et Register sont visibles
     cy.get('span').contains('Login').should('be.visible');
@@ -40,7 +27,7 @@ describe('Logout spec', () => {
   it('should not allow access to protected routes after logout', () => {
     // Logout
     cy.get('span').contains('Logout').click();
-    cy.url().should('eq', 'http://localhost:4200/');
+    cy.url().should('contain', Cypress.config().baseUrl);
 
     // Essayer d'accéder à /sessions
     cy.visit('/sessions');
