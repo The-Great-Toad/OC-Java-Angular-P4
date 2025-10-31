@@ -3,7 +3,7 @@
         <mat-card-title>
             <div fxLayout="row" fxLayoutAlign="space-between center">
                 <div fxLayout="row" fxLayoutAlign="start center">
-                    <button mat-icon-button (click)="back()">
+                    <button mat-icon-button (click)="back()" data-test="back-button">
                         <mat-icon>arrow_back</mat-icon>
                     </button>
                     <h1 data-test="session-name">{{session.name | titlecase}}</h1>
@@ -67,7 +67,7 @@
                 {{ session.description }}
                 <br>
             </div>
-            <div class="date" class="my2" fxLayout="row" fxLayoutAlign="space-between center">
+            <div class="date my2" fxLayout="row" fxLayoutAlign="space-between center">
                 <div class="created" data-test="session-created-date"><i>Create at: </i> {{
                     session.createdAt| date: 'longDate'}}</div>
                 <div class="updated" data-test="session-updated-date"><i>Last update: </i> {{

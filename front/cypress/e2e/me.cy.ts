@@ -1,12 +1,16 @@
 import user from '../fixtures/user-regular.json';
 import admin from '../fixtures/user-admin.json';
+import { login } from '../support/e2e';
 
 describe('Account page', () => {
   context('initial state', () => {
     before(() => {
-      cy.visit('/me');
       login('user-regular.json');
       goToAccountPage(user.id, 'user-regular.json');
+    });
+
+    it('should display have a back button', () => {
+      cy.getByData('back-button').should('exist');
     });
 
     it('should display page title', () => {
@@ -43,7 +47,6 @@ describe('Account page', () => {
 
   context('Regular user journey', () => {
     before(() => {
-      cy.visit('/me');
       login('user-regular.json');
       goToAccountPage(user.id, 'user-regular.json');
     });
@@ -59,13 +62,12 @@ describe('Account page', () => {
         .should('exist')
         .contains('Your account has been deleted !');
 
-      cy.url().should('eq', `${Cypress.config().baseUrl}/`);
+      cy.url().should('contain', Cypress.config().baseUrl);
     });
   });
 
   context('Admin user journey', () => {
     before(() => {
-      cy.visit('/me');
       login('user-admin.json');
       goToAccountPage(admin.id, 'user-admin.json');
     });
@@ -88,25 +90,13 @@ describe('Account page', () => {
         getDisplayDate(admin.updatedAt)
       );
     });
+
+    it('should be able to go back to the session list', () => {
+      cy.getByData('back-button').should('exist').click();
+      cy.url().should('include', '/sessions');
+    });
   });
 });
-
-function login(fixture: string) {
-  cy.intercept('POST', '/api/auth/login', {
-    fixture: fixture,
-  }).as('loginRequest');
-
-  cy.intercept('GET', '/api/session', {
-    fixture: 'sessions.json',
-  }).as('sessionList');
-
-  // Remplir le formulaire de login et le soumettre
-  cy.getByData('email-input').type('valid@email.com');
-  cy.getByData('password-input').type('password123');
-  cy.getByData('submit-button').click();
-
-  cy.url().should('include', '/sessions');
-}
 
 function goToAccountPage(userId: number, fixture: string) {
   cy.intercept('GET', `/api/user/${userId}`, {

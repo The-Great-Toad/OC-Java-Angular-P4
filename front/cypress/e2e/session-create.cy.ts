@@ -1,6 +1,7 @@
+import { login } from '../support/e2e';
+
 describe('Sessions page', () => {
   before(() => {
-    cy.visit('/sessions/create');
     login('user-admin.json');
     goToCreateForm();
   });
@@ -53,7 +54,6 @@ describe('Sessions page', () => {
 
   context('Admin user journey', () => {
     before(() => {
-      cy.visit('/sessions/create');
       login('user-admin.json');
       goToCreateForm();
     });
@@ -83,23 +83,6 @@ describe('Sessions page', () => {
     });
   });
 });
-
-function login(fixture: string) {
-  cy.intercept('POST', '/api/auth/login', {
-    fixture: fixture,
-  }).as('loginRequest');
-
-  cy.intercept('GET', '/api/session', {
-    fixture: 'sessions.json',
-  }).as('sessionList');
-
-  // Remplir le formulaire de login et le soumettre
-  cy.getByData('email-input').type('valid@email.com');
-  cy.getByData('password-input').type('password123');
-  cy.getByData('submit-button').click();
-
-  cy.url().should('include', '/sessions');
-}
 
 function goToCreateForm() {
   cy.intercept('GET', '/api/teacher', {
