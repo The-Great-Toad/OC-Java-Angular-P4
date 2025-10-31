@@ -17,14 +17,14 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
  */
 @DisplayName("Integration Tests - Sessions")
 @TestMethodOrder(MethodOrderer.OrderAnnotation.class)
-public class SessionIT extends ITUtils {
+class SessionIT extends ITUtils {
 
 	private User testUser;
     private Session session;
 	private SessionDto sessionDto;
 
 	@BeforeEach
-	public void setUp() {
+	void setUp() {
 		createTeacher("IT Teacher", "Integration");
         testUser = createUser(USER_TEST_EMAIL);
         session = createSession();
@@ -32,7 +32,7 @@ public class SessionIT extends ITUtils {
 	}
 
 	@AfterEach
-	public void tearDown() {
+	void tearDown() {
 		deleteTestSession();
 		deleteTestUser();
 		deleteTestTeacher();
@@ -42,7 +42,7 @@ public class SessionIT extends ITUtils {
 	@Order(1)
 	@DisplayName("Should retrieve all sessions")
 	@WithMockUser(username = USER_TEST_EMAIL)
-	public void shouldGetAllSessions() throws Exception {
+	void shouldGetAllSessions() throws Exception {
 		mockMvc.perform(get("/api/session"))
 				.andExpect(status().isOk())
 				.andExpect(jsonPath("$").isArray())
@@ -53,7 +53,7 @@ public class SessionIT extends ITUtils {
 	@Order(2)
 	@DisplayName("Should retrieve a session by ID")
 	@WithMockUser(username = USER_TEST_EMAIL)
-	public void shouldGetSessionById() throws Exception {
+	void shouldGetSessionById() throws Exception {
 		mockMvc.perform(get("/api/session/" + session.getId()))
 				.andExpect(status().isOk())
 				.andExpect(jsonPath("$.id").value(session.getId()))
@@ -65,7 +65,7 @@ public class SessionIT extends ITUtils {
 	@Order(3)
 	@DisplayName("Should return 404 for a non-existent session")
 	@WithMockUser(username = USER_TEST_EMAIL)
-	public void shouldReturn404ForNonExistentSession() throws Exception {
+	void shouldReturn404ForNonExistentSession() throws Exception {
 		mockMvc.perform(get("/api/session/99999"))
 				.andExpect(status().isNotFound());
 	}
@@ -74,7 +74,7 @@ public class SessionIT extends ITUtils {
 	@Order(4)
 	@DisplayName("Should return BadRequest for an invalid ID")
 	@WithMockUser(username = USER_TEST_EMAIL)
-	public void shouldReturnBadRequestForInvalidId() throws Exception {
+	void shouldReturnBadRequestForInvalidId() throws Exception {
 		mockMvc.perform(get("/api/session/invalid"))
 				.andExpect(status().isBadRequest());
 	}
@@ -83,7 +83,7 @@ public class SessionIT extends ITUtils {
 	@Order(5)
 	@DisplayName("Should create a new session (admin)")
 	@WithMockUser(username = ADMIN_TEST_EMAIL, roles = {ADMIN})
-	public void shouldCreateNewSessionAsAdmin() throws Exception {
+	void shouldCreateNewSessionAsAdmin() throws Exception {
 		mockMvc.perform(post("/api/session")
 						.contentType(MediaType.APPLICATION_JSON)
 						.content(objectMapper.writeValueAsString(sessionDto)))
@@ -99,7 +99,7 @@ public class SessionIT extends ITUtils {
 	@Order(6)
 	@DisplayName("Should update an existing session (admin)")
 	@WithMockUser(username = ADMIN_TEST_EMAIL, roles = {ADMIN})
-	public void shouldUpdateSessionAsAdmin() throws Exception {
+	void shouldUpdateSessionAsAdmin() throws Exception {
 		sessionDto.setName("Updated Session");
 		sessionDto.setDescription("Updated description");
 
@@ -119,7 +119,7 @@ public class SessionIT extends ITUtils {
 	@Order(7)
 	@DisplayName("Should delete an existing session (admin)")
 	@WithMockUser(username = ADMIN_TEST_EMAIL, roles = {ADMIN})
-	public void shouldDeleteSessionAsAdmin() throws Exception {
+	void shouldDeleteSessionAsAdmin() throws Exception {
 		mockMvc.perform(delete("/api/session/" + session.getId()))
 				.andExpect(status().isOk());
 
@@ -130,7 +130,7 @@ public class SessionIT extends ITUtils {
 	@Order(8)
 	@DisplayName("Should allow a user to participate in a session")
 	@WithMockUser(username = USER_TEST_EMAIL)
-	public void shouldAllowUserToParticipateInSession() throws Exception {
+	void shouldAllowUserToParticipateInSession() throws Exception {
 		mockMvc.perform(post("/api/session/" + session.getId() + "/participate/" + testUser.getId()))
 				.andExpect(status().isOk());
 
@@ -143,7 +143,7 @@ public class SessionIT extends ITUtils {
 	@Order(9)
 	@DisplayName("Should allow a user to cancel their participation")
 	@WithMockUser(username = USER_TEST_EMAIL)
-	public void shouldAllowUserToCancelParticipation() throws Exception {
+	void shouldAllowUserToCancelParticipation() throws Exception {
 		// Add user to session
 		mockMvc.perform(post("/api/session/" + session.getId() + "/participate/" + testUser.getId()))
 				.andExpect(status().isOk());
@@ -161,7 +161,7 @@ public class SessionIT extends ITUtils {
 	@Order(10)
 	@DisplayName("Should fail to participate with an invalid user ID")
 	@WithMockUser(username = USER_TEST_EMAIL)
-	public void shouldFailToParticipateWithInvalidUserId() throws Exception {
+	void shouldFailToParticipateWithInvalidUserId() throws Exception {
 		mockMvc.perform(post("/api/session/" + session.getId() + "/participate/invalid"))
 				.andExpect(status().isBadRequest());
 	}
@@ -169,7 +169,7 @@ public class SessionIT extends ITUtils {
 	@Test
 	@Order(11)
 	@DisplayName("Should fail to access without authentication")
-	public void shouldFailToAccessWithoutAuthentication() throws Exception {
+	void shouldFailToAccessWithoutAuthentication() throws Exception {
 		mockMvc.perform(get("/api/session"))
 				.andExpect(status().isUnauthorized());
 	}
@@ -178,7 +178,7 @@ public class SessionIT extends ITUtils {
 	@Order(12)
 	@DisplayName("Should return 404 when deleting a non-existent session")
 	@WithMockUser(username = ADMIN_TEST_EMAIL, roles = {"ADMIN"})
-	public void shouldReturn404WhenDeletingNonExistentSession() throws Exception {
+	void shouldReturn404WhenDeletingNonExistentSession() throws Exception {
 		mockMvc.perform(delete("/api/session/99999"))
 				.andExpect(status().isNotFound());
 	}
@@ -187,7 +187,7 @@ public class SessionIT extends ITUtils {
 	@Order(13)
 	@DisplayName("Should return BadRequest when updating with invalid session ID")
 	@WithMockUser(username = ADMIN_TEST_EMAIL, roles = {"ADMIN"})
-	public void shouldReturnBadRequestWhenUpdatingWithInvalidId() throws Exception {
+	void shouldReturnBadRequestWhenUpdatingWithInvalidId() throws Exception {
 		mockMvc.perform(put("/api/session/invalid")
 						.contentType(MediaType.APPLICATION_JSON)
 						.content(objectMapper.writeValueAsString(sessionDto)))
@@ -198,7 +198,7 @@ public class SessionIT extends ITUtils {
 	@Order(14)
 	@DisplayName("Should fail to participate with an invalid session ID")
 	@WithMockUser(username = USER_TEST_EMAIL)
-	public void shouldFailToParticipateWithInvalidSessionId() throws Exception {
+	void shouldFailToParticipateWithInvalidSessionId() throws Exception {
 		mockMvc.perform(post("/api/session/invalid/participate/" + testUser.getId()))
 				.andExpect(status().isBadRequest());
 	}
@@ -207,7 +207,7 @@ public class SessionIT extends ITUtils {
 	@Order(15)
 	@DisplayName("Should fail to cancel participation with invalid IDs")
 	@WithMockUser(username = USER_TEST_EMAIL)
-	public void shouldFailToCancelParticipationWithInvalidIds() throws Exception {
+	void shouldFailToCancelParticipationWithInvalidIds() throws Exception {
 		mockMvc.perform(delete("/api/session/invalid/participate/invalid"))
 				.andExpect(status().isBadRequest());
 	}

@@ -18,13 +18,14 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 @DisplayName("Integration Tests - Teachers")
 class TeacherIT extends ITUtils {
 
+    private User testUser;
     private String testToken;
     private Teacher teacher1;
 
     @BeforeEach
     void setUp() {
         // Create test user for authentication
-        User testUser = createUser("testuser@yoga.com");
+        testUser = createUser("testuser@yoga.com");
 
         // Generate JWT token
         testToken = generateToken(testUser.getEmail());
@@ -99,6 +100,7 @@ class TeacherIT extends ITUtils {
         @DisplayName("Should return empty array when no teachers exist")
         void shouldReturnEmptyArrayWhenNoTeachersExist() throws Exception {
             cleanDatabase();
+            createUser(testUser.getEmail());
 
             mockMvc.perform(get("/api/teacher")
                             .header("Authorization", "Bearer " + testToken))
