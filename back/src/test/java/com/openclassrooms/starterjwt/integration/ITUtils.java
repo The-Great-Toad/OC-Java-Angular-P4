@@ -43,27 +43,6 @@ public class ITUtils {
     protected static final String LOGIN_URL = "/api/auth/login";
 
     /* **************************************** HELPER METHODS **************************************** */
-    protected void deleteTestUser() {
-        userRepository.findByEmail(USER_IT_EMAIL)
-                .ifPresent(user -> userRepository.delete(user));
-    }
-
-    protected void deleteTestTeacher() {
-        teacherRepository.findAll().forEach(teacher -> {
-            if (teacher.getLastName().equals("IT Teacher")) {
-                teacherRepository.delete(teacher);
-            }
-        });
-    }
-
-    protected void deleteTestSession() {
-        sessionRepository.findAll().forEach(session -> {
-            if (session.getName().startsWith("Test") || session.getName().equals("Updated Session")) {
-                sessionRepository.delete(session);
-            }
-        });
-    }
-
     protected void cleanDatabase() {
         sessionRepository.deleteAll();
         userRepository.deleteAll();
@@ -71,6 +50,15 @@ public class ITUtils {
     }
 
     /* **************************************** REQUEST **************************************** */
+    protected SignupRequest getSignupRequest() {
+        return SignupRequest.builder()
+                .email(USER_IT_EMAIL)
+                .firstName("Integration")
+                .lastName("Test")
+                .password("testPassword123!")
+                .build();
+    }
+
     protected LoginRequest getLoginRequest() {
         return LoginRequest.builder()
                 .email(USER_IT_EMAIL)
@@ -79,18 +67,10 @@ public class ITUtils {
     }
 
     protected LoginRequest getAdminLoginRequest() {
+        createAdminUser();
         return LoginRequest.builder()
                 .email("admin@admin.com")
                 .password("password")
-                .build();
-    }
-
-    protected SignupRequest getSignupRequest() {
-        return SignupRequest.builder()
-                .email(USER_IT_EMAIL)
-                .firstName("Integration")
-                .lastName("Test")
-                .password("testPassword123!")
                 .build();
     }
 
@@ -113,6 +93,17 @@ public class ITUtils {
                 .admin(false)
                 .build();
         return userRepository.save(user);
+    }
+
+    protected void createAdminUser() {
+        User user = User.builder()
+                .email("admin@admin.com")
+                .firstName("Test")
+                .lastName("User")
+                .password(passwordEncoder.encode("password"))
+                .admin(true)
+                .build();
+        userRepository.save(user);
     }
 
     /* **************************************** SESSION **************************************** */

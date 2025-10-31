@@ -2,7 +2,6 @@ package com.openclassrooms.starterjwt.integration;
 
 import com.openclassrooms.starterjwt.dto.SessionDto;
 import com.openclassrooms.starterjwt.models.Session;
-import com.openclassrooms.starterjwt.models.User;
 import org.junit.jupiter.api.*;
 import org.springframework.http.MediaType;
 import org.springframework.security.test.context.support.WithMockUser;
@@ -19,23 +18,21 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 @TestMethodOrder(MethodOrderer.OrderAnnotation.class)
 class SessionIT extends ITUtils {
 
-	private User testUser;
+	private com.openclassrooms.starterjwt.models.User testUser;
     private Session session;
 	private SessionDto sessionDto;
 
 	@BeforeEach
 	void setUp() {
 		createTeacher("IT Teacher", "Integration");
-        testUser = createUser(USER_TEST_EMAIL);
+        testUser = createUser("testuser@yoga.com");
         session = createSession();
 		sessionDto = getSessionDto();
 	}
 
 	@AfterEach
 	void tearDown() {
-		deleteTestSession();
-		deleteTestUser();
-		deleteTestTeacher();
+		cleanDatabase();
 	}
 
 	@Test

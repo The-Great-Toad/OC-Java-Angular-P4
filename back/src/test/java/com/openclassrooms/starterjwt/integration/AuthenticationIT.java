@@ -11,6 +11,7 @@ import org.springframework.test.web.servlet.MvcResult;
 
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
+import static org.springframework.test.web.servlet.result.MockMvcResultHandlers.print;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.*;
 
 /**
@@ -31,7 +32,7 @@ class AuthenticationIT extends ITUtils {
 
 	@AfterEach
 	void tearDown() {
-		deleteTestUser();
+        userRepository.deleteAll();
 	}
 
 	@Test
@@ -140,12 +141,16 @@ class AuthenticationIT extends ITUtils {
 	@Test
 	@DisplayName("Complete flow: Register - login - generate valid JWT")
 	void shouldCompleteFullAuthenticationFlow() throws Exception {
+        userRepository.deleteAll();
+        assertThat(userRepository.count()).isZero();
+
 		register();
 		assertThat(userRepository.existsByEmail(USER_IT_EMAIL)).isTrue();
 
 		MvcResult loginResult = mockMvc.perform(post(LOGIN_URL)
 						.contentType(MediaType.APPLICATION_JSON)
 						.content(objectMapper.writeValueAsString(loginRequest)))
+                .andDo(print())
 				.andExpect(status().isOk())
 				.andExpect(jsonPath("$.token").isNotEmpty())
 				.andExpect(jsonPath("$.type").value("Bearer"))
